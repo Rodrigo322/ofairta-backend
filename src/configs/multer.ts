@@ -1,13 +1,7 @@
-import { diskStorage, Options } from "multer";
-import path from "node:path";
+import { memoryStorage, Options } from "multer";
 
 export default {
-  storage: diskStorage({
-    destination: path.join(__dirname, "..", "..", "uploads"),
-    filename: (req, file, cb) => {
-      cb(null, `${Date.now()}-${file.originalname}`);
-    },
-  }),
+  storage: memoryStorage(),
   limits: {
     fileSize: 8 * 1024 * 1024, // 8MB
   },

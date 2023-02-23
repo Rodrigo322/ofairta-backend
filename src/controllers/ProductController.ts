@@ -1,13 +1,14 @@
+import { GetSignedUrlConfig } from "@google-cloud/storage";
 import { Request, Response } from "express";
+
 import { prisma } from "../database/prisma";
+import { storage } from "../firebase";
 
 export const createProduct = async (req: Request, res: Response) => {
   try {
     const { name, description, price, quantity } = req.body;
     const { storeId } = req.params;
     const { id } = req.user;
-
-    const requestImage = req.file as Express.Multer.File;
 
     const user = await prisma.user.findUnique({
       where: {
@@ -35,13 +36,50 @@ export const createProduct = async (req: Request, res: Response) => {
         .json({ message: "Usuário não é dono desta banca" });
     }
 
+    const requestImage = req.file as Express.Multer.File;
+
+    if (!requestImage) {
+      return res
+        .status(400)
+        .json({ message: "Nenhum arquivo de imagem enviado." });
+    }
+
+    const bucket = storage.bucket();
+
+    const fileRef = bucket.file(requestImage.originalname);
+    const fileStream = fileRef.createWriteStream({
+      metadata: {
+        contentType: requestImage.mimetype,
+      },
+    });
+
+    fileStream.on("error", (error) => {
+      console.error(error);
+      res.status(500).json("Não foi possível carregar a imagem.");
+    });
+
+    fileStream.on("finish", () => {
+      res.status(200).json("Imagem enviada com sucesso.");
+    });
+
+    fileStream.end(requestImage.buffer);
+
+    const config: GetSignedUrlConfig = {
+      action: "read",
+      expires: Date.now() + 1000 * 60 * 60 * 24 * 7, // 7 days
+    };
+
+    const [url] = await fileRef.getSignedUrl(config);
+
+    console.log("File available at", url);
+
     const createProduct = await prisma.product.create({
       data: {
         name,
         description,
         price: Number(price),
         quantity: Number(quantity),
-        image: `${process.env.IMAGE_PRODUCT_URL}/${requestImage.filename}`,
+        image: url,
         store: {
           connect: {
             id: storeId,
