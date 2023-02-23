@@ -10,7 +10,7 @@
     "dev": "tsnd --exit-child --respawn --transpile-only --files  src/server.ts",
     "build": "tsc",
     "start": "node build/server.js",
-    "vercel-build": "npx prisma migrate deploy && npx prisma db seed"
+    "vercel-build": "npx prisma migrate deploy"
     
   },
   "keywords": [],

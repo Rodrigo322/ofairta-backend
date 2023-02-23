@@ -33,7 +33,7 @@ export const router = Router();
 
 //rotas de nível de acesso
 router.post("/access-level", authMiddleware(["adm"]), createAccessLevel);
-router.get("/access-level", getAllAccessLevel);
+router.get("/access-level", authMiddleware(["adm"]), getAllAccessLevel);
 
 //rotas do usuário
 router.post("/user", createUser);
