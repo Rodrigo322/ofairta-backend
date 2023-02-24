@@ -55,6 +55,8 @@ $ git clone https://github.com/Rodrigo322/ofairta-backend.git
 # Vá para a pasta backend
 $ cd ofairta-backend
 
+
+
 # Instale as dependências
 $ npm install ou yarn
 
@@ -62,6 +64,8 @@ $ npm install ou yarn
 $ npm run dev ou yarn dev
 
 # O servidor inciará na porta:3333 - acesse http://localhost:3333
+
+
 
 ```
 
