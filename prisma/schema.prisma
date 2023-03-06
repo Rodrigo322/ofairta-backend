@@ -20,6 +20,18 @@ model User {
   sales_as_buyer   Sale[]            @relation("buyer")
   accessLevels     AccessLevel[]
   userAccessLevels UserAccessLevel[]
+  address          Address[]
+}
+
+model Address {
+  id           String  @id @default(uuid())
+  street       String
+  CEP          String
+  city         String
+  state        String
+  neighborhood String
+  User         User?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId       String?
 }
 
 // Definition of the 'AccessLevel' table

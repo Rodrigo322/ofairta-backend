@@ -8,6 +8,11 @@ import {
   createAccessLevel,
   getAllAccessLevel,
 } from "./controllers/AccessLevelController";
+import {
+  createAddress,
+  deleteAddress,
+  getAddress,
+} from "./controllers/AddressController";
 import { signIn } from "./controllers/AuthController";
 import {
   createProduct,
@@ -23,6 +28,7 @@ import {
 import { createStore, getAllStore } from "./controllers/StoreController";
 import {
   createUser,
+  deleteUser,
   getAllUsers,
   getUniqueUser,
   updateUser,
@@ -37,6 +43,11 @@ router.get("/access-level", authMiddleware(["adm"]), getAllAccessLevel);
 
 //rotas do usuário
 router.post("/user", createUser);
+router.delete(
+  "/delete-user",
+  authMiddleware(["adm", "Vendedor", "Comprador"]),
+  deleteUser
+);
 router.get("/user", authMiddleware(["adm"]), getAllUsers);
 router.put(
   "/update-user",
@@ -47,6 +58,23 @@ router.get(
   "/unique-user",
   authMiddleware(["adm", "Vendedor", "Comprador"]),
   getUniqueUser
+);
+
+//rotas de endereços
+router.post(
+  "/create-address",
+  authMiddleware(["adm", "Vendedor", "Comprador"]),
+  createAddress
+);
+router.get(
+  "/get-address",
+  authMiddleware(["adm", "Vendedor", "Comprador"]),
+  getAddress
+);
+router.delete(
+  "/delete-address/:addressId",
+  authMiddleware(["adm", "Vendedor", "Comprador"]),
+  deleteAddress
 );
 
 //rotas de autenticação
