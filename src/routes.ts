@@ -12,6 +12,7 @@ import {
   createAddress,
   deleteAddress,
   getAddress,
+  updateAddress,
 } from "./controllers/AddressController";
 import { signIn } from "./controllers/AuthController";
 import {
@@ -71,6 +72,12 @@ router.get(
   authMiddleware(["adm", "Vendedor", "Comprador"]),
   getAddress
 );
+router.put(
+  "/update-address/:addressId",
+  authMiddleware(["adm", "Vendedor", "Comprador"]),
+  updateAddress
+);
+
 router.delete(
   "/delete-address/:addressId",
   authMiddleware(["adm", "Vendedor", "Comprador"]),
