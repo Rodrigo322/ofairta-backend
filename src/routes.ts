@@ -24,6 +24,7 @@ import {
 import {
   getAllSaleByUserId,
   getAllSales,
+  getDetailsSaleByUserId,
   performSale,
 } from "./controllers/SaleController";
 import { createStore, getAllStore } from "./controllers/StoreController";
@@ -121,6 +122,11 @@ router.get(
 //rotas das vendas
 router.post("/create-sale", authMiddleware(["adm", "Comprador"]), performSale);
 router.get("/get-all-sale", authMiddleware(["adm", "Vendedor"]), getAllSales);
+router.get(
+  "/get-details-sale-by-user/:saleId",
+  authMiddleware(["adm", "Vendedor", "Comprador"]),
+  getDetailsSaleByUserId
+);
 router.get(
   "/get-all-sale-by-user",
   authMiddleware(["adm", "Comprador"]),

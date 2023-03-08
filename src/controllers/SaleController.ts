@@ -104,3 +104,36 @@ export const getAllSaleByUserId = async (req: Request, res: Response) => {
     return res.status(500).json(error);
   }
 };
+
+export const getDetailsSaleByUserId = async (req: Request, res: Response) => {
+  try {
+    const { saleId } = req.params;
+
+    const DetailsSales = await prisma.sale.findUnique({
+      where: {
+        id: saleId,
+      },
+      select: {
+        id: true,
+        total_value: true,
+        saleProducts: {
+          select: {
+            product: {
+              select: {
+                id: true,
+                image: true,
+                name: true,
+                price: true,
+              },
+            },
+            quantity: true,
+          },
+        },
+      },
+    });
+
+    return res.status(200).json(DetailsSales);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
