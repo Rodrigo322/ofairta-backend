@@ -18,22 +18,6 @@ const userSchema = z.object({
   accessLevelName: z.string(),
 });
 
-const userUpdateSchema = z.object({
-  name: z
-    .string()
-    .min(3, { message: "O nome deve conter no mínimo 3 caracteres." })
-    .optional(),
-  email: z.string().email().optional(),
-  cpf: z
-    .string()
-    .min(11, { message: "O CPF deve conter no mínimo 11 caracteres." })
-    .optional(),
-  password: z
-    .string()
-    .min(6, { message: "O CPF deve conter no mínimo 6 caracteres." })
-    .optional(),
-});
-
 export const createUser = async (req: Request, res: Response) => {
   try {
     const { name, email, cpf, password, accessLevelName } = userSchema.parse(
@@ -137,17 +121,15 @@ export const getUniqueUser = async (req: Request, res: Response) => {
 
 export const updateUser = async (req: Request, res: Response) => {
   try {
-    const { name, email, cpf, password } = userUpdateSchema.parse(req.body);
+    const { name, email, cpf } = req.body;
     const { id } = req.user;
 
     const isUser = await prisma.user.findUnique({
-      where: { email },
+      where: { id },
     });
 
-    if (isUser) {
-      return res
-        .status(400)
-        .json({ message: "Já existe um usuário com esté e-mail." });
+    if (!isUser) {
+      return res.status(400).json({ message: "Usuário não encontrado" });
     }
 
     const user = await prisma.user.update({
@@ -156,15 +138,14 @@ export const updateUser = async (req: Request, res: Response) => {
       },
       data: {
         name,
-        email,
-        password,
         cpf,
+        email,
       },
     });
 
     return res.status(200).json(user);
   } catch (error) {
-    return res.status(500).json({ error: error });
+    return res.status(400).json({ error });
   }
 };
 

@@ -77,7 +77,6 @@ router.put(
   authMiddleware(["adm", "Vendedor", "Comprador"]),
   updateAddress
 );
-
 router.delete(
   "/delete-address/:addressId",
   authMiddleware(["adm", "Vendedor", "Comprador"]),
