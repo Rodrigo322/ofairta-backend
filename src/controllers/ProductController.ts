@@ -55,7 +55,7 @@ export const createProduct = async (req: Request, res: Response) => {
 
     fileStream.on("error", (error) => {
       console.error(error);
-      res.status(500).json("Não foi possível carregar a imagem.");
+      res.status(400).json(error + " Não foi possível carregar a imagem.");
     });
 
     fileStream.on("finish", () => {
@@ -70,8 +70,6 @@ export const createProduct = async (req: Request, res: Response) => {
     };
 
     const [url] = await fileRef.getSignedUrl(config);
-
-    console.log("File available at", url);
 
     const createProduct = await prisma.product.create({
       data: {
@@ -90,7 +88,7 @@ export const createProduct = async (req: Request, res: Response) => {
 
     return res.status(200).json(createProduct);
   } catch (error) {
-    return res.status(500).json({ error, message: "aconteceu um erro" });
+    return res.status(400).json(error);
   }
 };
 
@@ -113,7 +111,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
     return res.status(200).json(product);
   } catch (error) {
     console.error(error);
-    return res.status(500).json(error);
+    return res.status(400).json(error);
   }
 };
 
@@ -139,7 +137,7 @@ export const getAllProductsStore = async (req: Request, res: Response) => {
     return res.json(products);
   } catch (error) {
     console.error(error);
-    return res.status(500).json(error);
+    return res.status(400).json(error);
   }
 };
 
@@ -149,7 +147,7 @@ export const deleteManyProducts = async (req: Request, res: Response) => {
 
     return res.status(204);
   } catch (error) {
-    return res.status(500).json(error);
+    return res.status(400).json(error);
   }
 };
 
@@ -172,11 +170,11 @@ export const getUniqueProducts = async (req: Request, res: Response) => {
     });
 
     if (!product) {
-      return res.status(400).json({ message: "Produto não encontrado!0" });
+      return res.status(400).json({ message: "Produto não encontrado!" });
     }
 
     return res.status(200).json(product);
   } catch (error) {
-    return res.status(500).json(error);
+    return res.status(400).json(error);
   }
 };

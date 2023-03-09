@@ -67,7 +67,6 @@ export const performSale = async (req: Request, res: Response) => {
     res.status(400).json(error);
   }
 };
-
 export const getAllSales = async (req: Request, res: Response) => {
   try {
     const sales = await prisma.sale.findMany();
@@ -77,7 +76,6 @@ export const getAllSales = async (req: Request, res: Response) => {
     return res.status(400).json(error);
   }
 };
-
 export const getAllSaleByUserId = async (req: Request, res: Response) => {
   try {
     const { id } = req.user;
@@ -103,7 +101,6 @@ export const getAllSaleByUserId = async (req: Request, res: Response) => {
     return res.status(400).json(error);
   }
 };
-
 export const getDetailsSaleByUserId = async (req: Request, res: Response) => {
   try {
     const { saleId } = req.params;
@@ -144,7 +141,6 @@ export const getDetailsSaleByUserId = async (req: Request, res: Response) => {
     return res.status(400).json(error);
   }
 };
-
 export const getAllSaleByOwner = async (req: Request, res: Response) => {
   try {
     const { id } = req.user;
