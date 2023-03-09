@@ -27,6 +27,7 @@ import {
   getAllSales,
   getDetailsSaleByUserId,
   performSale,
+  updateClosedSaleByOwner,
 } from "./controllers/SaleController";
 import {
   createStore,
@@ -178,4 +179,13 @@ router.get(
   "/get-all-sale-by-owner",
   authMiddleware(["adm", "Vendedor"]),
   getAllSaleByOwner
+);
+
+/**
+ * Atualizar STATUS da venda, como finalizada ou aberta
+ */
+router.put(
+  "/update-closed-sale-by-owner/:saleId",
+  authMiddleware(["adm", "Vendedor"]),
+  updateClosedSaleByOwner
 );

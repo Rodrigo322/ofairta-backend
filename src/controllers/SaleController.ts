@@ -94,6 +94,7 @@ export const getAllSaleByUserId = async (req: Request, res: Response) => {
           },
         },
         createdAt: true,
+        status: true,
       },
     });
 
@@ -128,6 +129,7 @@ export const getDetailsSaleByUserId = async (req: Request, res: Response) => {
           },
         },
         createdAt: true,
+        status: true,
       },
     });
 
@@ -160,10 +162,44 @@ export const getAllSaleByOwner = async (req: Request, res: Response) => {
           },
         },
         saleProducts: true,
+        createdAt: true,
+        status: true,
       },
     });
 
     return res.status(200).json(allSales);
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
+export const updateClosedSaleByOwner = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.user;
+    const { saleId } = req.params;
+    const { status } = req.body;
+
+    const sale = await prisma.sale.findUnique({
+      where: {
+        id: saleId,
+      },
+    });
+
+    if (sale?.sellerId !== id) {
+      return res
+        .status(400)
+        .json({ message: "Está venda não pertence a esté vendedor." });
+    }
+
+    const updateSaleByOwner = await prisma.sale.update({
+      where: {
+        id: saleId,
+      },
+      data: {
+        status,
+      },
+    });
+
+    return res.status(200).json(updateSaleByOwner);
   } catch (error) {
     return res.status(400).json(error);
   }
