@@ -27,7 +27,12 @@ import {
   getDetailsSaleByUserId,
   performSale,
 } from "./controllers/SaleController";
-import { createStore, getAllStore } from "./controllers/StoreController";
+import {
+  createStore,
+  getAllStore,
+  getAllStoreByOwner,
+  getUniqueStoreByOwner,
+} from "./controllers/StoreController";
 import {
   createUser,
   deleteUser,
@@ -94,6 +99,16 @@ router.get(
   authMiddleware(["adm", "Vendedor", "Comprador"]),
   getAllStore
 );
+router.get(
+  "/get-all-store-by-owner",
+  authMiddleware(["adm", "Vendedor", "Comprador"]),
+  getAllStoreByOwner
+);
+router.get(
+  "/get-unique-store-by-owner/:storeId",
+  authMiddleware(["adm", "Vendedor", "Comprador"]),
+  getUniqueStoreByOwner
+);
 
 //rotas do produto
 router.post(
@@ -102,7 +117,6 @@ router.post(
   upload.single("image"),
   createProduct
 );
-
 router.get(
   "/get-all-product",
   authMiddleware(["adm", "Vendedor", "Comprador"]),
