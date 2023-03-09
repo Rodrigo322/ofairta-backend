@@ -4,7 +4,7 @@ const serviceAccount = require("../firebase-admin.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  storageBucket: "gs://oferta-3caf7.appspot.com",
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
 });
 
 export const storage = admin.storage();

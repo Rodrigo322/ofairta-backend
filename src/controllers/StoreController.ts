@@ -29,8 +29,7 @@ export const createStore = async (req: Request, res: Response) => {
 
     return res.status(201).json(store);
   } catch (error) {
-    console.error(error);
-    return res.status(500).json(error);
+    return res.status(400).json(error);
   }
 };
 
@@ -68,8 +67,14 @@ export const updateStore = async (req: Request, res: Response) => {
       where: { id: storeId },
     });
 
+    if (isStore?.userId !== id) {
+      return res
+        .status(400)
+        .json({ message: "Banca não pertence e esse usuário." });
+    }
+
     if (!isStore) {
-      return res.status(400).json({ message: "Banca não encontrada" });
+      return res.status(400).json({ message: "Banca não encontrada." });
     }
 
     const updateStore = await prisma.store.update({
@@ -82,6 +87,6 @@ export const updateStore = async (req: Request, res: Response) => {
 
     return res.status(200).json(updateStore);
   } catch (error) {
-    return res.status(500).json(error);
+    return res.status(400).json(error);
   }
 };

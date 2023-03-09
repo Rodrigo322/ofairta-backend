@@ -4,21 +4,20 @@ import { z } from "zod";
 
 import { prisma } from "../database/prisma";
 
-const userSchema = z.object({
-  name: z
-    .string()
-    .min(3, { message: "O nome deve conter no mínimo 3 caracteres." }),
-  email: z.string().email(),
-  cpf: z
-    .string()
-    .min(11, { message: "O CPF deve conter no mínimo 11 caracteres." }),
-  password: z
-    .string()
-    .min(6, { message: "O CPF deve conter no mínimo 6 caracteres." }),
-  accessLevelName: z.string(),
-});
-
 export const createUser = async (req: Request, res: Response) => {
+  const userSchema = z.object({
+    name: z
+      .string()
+      .min(3, { message: "O nome deve conter no mínimo 3 caracteres." }),
+    email: z.string().email(),
+    cpf: z
+      .string()
+      .min(11, { message: "O CPF deve conter no mínimo 11 caracteres." }),
+    password: z
+      .string()
+      .min(6, { message: "A senha deve conter no mínimo 6 caracteres." }),
+    accessLevelName: z.string(),
+  });
   try {
     const { name, email, cpf, password, accessLevelName } = userSchema.parse(
       req.body
@@ -64,8 +63,8 @@ export const createUser = async (req: Request, res: Response) => {
     });
 
     return res.status(201).json(user);
-  } catch (error) {
-    res.status(400).json({ error });
+  } catch (error: any) {
+    res.status(400).json(error);
   }
 };
 
@@ -91,7 +90,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
 
     return res.status(200).json(users);
   } catch (error) {
-    return res.status(500).json({ error: error });
+    return res.status(400).json(error);
   }
 };
 
@@ -115,7 +114,7 @@ export const getUniqueUser = async (req: Request, res: Response) => {
 
     return res.status(200).json(user);
   } catch (error) {
-    return res.status(500).json({ error: error });
+    return res.status(500).json(error);
   }
 };
 
@@ -145,7 +144,7 @@ export const updateUser = async (req: Request, res: Response) => {
 
     return res.status(200).json(user);
   } catch (error) {
-    return res.status(400).json({ error });
+    return res.status(400).json(error);
   }
 };
 
@@ -171,6 +170,6 @@ export const deleteUser = async (req: Request, res: Response) => {
 
     return res.status(200).json({ message: "Usuário apagado com sucesso." });
   } catch (error) {
-    return res.status(200).json({ message: error });
+    return res.status(200).json(error);
   }
 };
