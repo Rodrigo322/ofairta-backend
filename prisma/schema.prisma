@@ -21,17 +21,22 @@ model User {
   accessLevels     AccessLevel[]
   userAccessLevels UserAccessLevel[]
   address          Address[]
+  profileImage     String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @default(now()) @updatedAt
 }
 
 model Address {
-  id           String  @id @default(uuid())
+  id           String   @id @default(uuid())
   street       String
   CEP          String
   city         String
   state        String
   neighborhood String
-  User         User?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  User         User?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId       String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now()) @updatedAt
 }
 
 // Definition of the 'AccessLevel' table
@@ -40,6 +45,8 @@ model AccessLevel {
   name             String            @unique
   users            User[]
   userAccessLevels UserAccessLevel[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @default(now()) @updatedAt
 }
 
 // Definition of the 'UserAccessLevel' table (associative table)
@@ -49,16 +56,21 @@ model UserAccessLevel {
   accessLevel   AccessLevel @relation(fields: [accessLevelId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId        String
   accessLevelId String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @default(now()) @updatedAt
 }
 
 // Definition of the 'Store' table
 model Store {
   id          String    @id @default(uuid())
   name        String
+  storeImage  String?
   description String
   products    Product[]
   userId      String
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  createdAt   DateTime  @default(now())
+  uupdatedAt  DateTime  @default(now()) @updatedAt
 }
 
 // Definition of the 'Product' table
@@ -72,6 +84,8 @@ model Product {
   sales       SaleProduct[]
   store       Store?        @relation(fields: [storeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   storeId     String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @default(now()) @updatedAt
 }
 
 // Definition of the 'Sale' table
@@ -86,14 +100,18 @@ model Sale {
   saleProducts SaleProduct[]
   user         User?         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId       String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now()) @updatedAt
 }
 
 // Definition of the 'SaleProduct' table (associative table)
 model SaleProduct {
-  id        String  @id @default(uuid())
+  id        String   @id @default(uuid())
   quantity  Int
-  sale      Sale    @relation(fields: [saleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  sale      Sale     @relation(fields: [saleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   saleId    String
   productId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
