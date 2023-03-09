@@ -29,6 +29,7 @@ import {
 } from "./controllers/SaleController";
 import {
   createStore,
+  deleteStore,
   getAllStore,
   getAllStoreByOwner,
   getUniqueStoreByOwner,
@@ -101,13 +102,19 @@ router.get(
 );
 router.get(
   "/get-all-store-by-owner",
-  authMiddleware(["adm", "Vendedor", "Comprador"]),
+  authMiddleware(["adm", "Vendedor"]),
   getAllStoreByOwner
 );
 router.get(
   "/get-unique-store-by-owner/:storeId",
-  authMiddleware(["adm", "Vendedor", "Comprador"]),
+  authMiddleware(["adm", "Vendedor"]),
   getUniqueStoreByOwner
+);
+
+router.get(
+  "/delete-store/:storeId",
+  authMiddleware(["adm", "Vendedor"]),
+  deleteStore
 );
 
 //rotas do produto
