@@ -37,7 +37,7 @@ export const createProduct = async (req: Request, res: Response) => {
     }
 
     const requestImage = req.file as Express.Multer.File;
-
+    console.log(requestImage);
     if (!requestImage) {
       return res
         .status(400)

@@ -37,6 +37,7 @@ import {
   getUniqueStoreByOwner,
 } from "./controllers/StoreController";
 import {
+  addProfileImage,
   createUser,
   deleteUser,
   getAllUsers,
@@ -68,6 +69,12 @@ router.get(
   "/unique-user",
   authMiddleware(["adm", "Vendedor", "Comprador"]),
   getUniqueUser
+);
+router.put(
+  "/add-profile-image-user",
+  upload.single("image"),
+  authMiddleware(["adm", "Vendedor", "Comprador"]),
+  addProfileImage
 );
 
 //rotas de endereços

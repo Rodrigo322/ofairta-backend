@@ -1,8 +1,10 @@
+import { GetSignedUrlConfig } from "@google-cloud/storage";
 import { hash } from "bcryptjs";
 import { Request, Response } from "express";
 import { z } from "zod";
 
 import { prisma } from "../database/prisma";
+import { storage } from "../firebase";
 
 export const createUser = async (req: Request, res: Response) => {
   const userSchema = z.object({
@@ -105,6 +107,7 @@ export const getUniqueUser = async (req: Request, res: Response) => {
         name: true,
         email: true,
         cpf: true,
+        image: true,
       },
     });
 
@@ -114,7 +117,7 @@ export const getUniqueUser = async (req: Request, res: Response) => {
 
     return res.status(200).json(user);
   } catch (error) {
-    return res.status(500).json(error);
+    return res.status(400).json(error);
   }
 };
 
@@ -170,6 +173,74 @@ export const deleteUser = async (req: Request, res: Response) => {
 
     return res.status(200).json({ message: "Usuário apagado com sucesso." });
   } catch (error) {
-    return res.status(200).json(error);
+    return res.status(400).json(error);
   }
+};
+
+export const addProfileImage = async (req: Request, res: Response) => {
+  const { id } = req.user;
+
+  const isUser = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  if (!isUser) {
+    return res.status(404).json({ message: "Usuário não encontrado." });
+  }
+
+  const requestImage = req.file as Express.Multer.File;
+
+  console.log(requestImage);
+
+  if (!requestImage) {
+    return res
+      .status(400)
+      .json({ message: "Nenhum arquivo de imagem enviado." });
+  }
+
+  const bucket = storage.bucket();
+
+  const fileRef = bucket.file(requestImage.originalname);
+  const fileStream = fileRef.createWriteStream({
+    metadata: {
+      contentType: requestImage.mimetype,
+    },
+  });
+
+  fileStream.on("error", (error) => {
+    console.error(error);
+    res.status(400).json(error + " Não foi possível carregar a imagem.");
+  });
+
+  fileStream.on("finish", () => {
+    res.status(200).json("Imagem enviada com sucesso.");
+  });
+
+  fileStream.end(requestImage.buffer);
+
+  const config: GetSignedUrlConfig = {
+    action: "read",
+    expires: Date.now() + 1000 * 60 * 60 * 24 * 7, // 7 days
+  };
+
+  const [url] = await fileRef.getSignedUrl(config);
+
+  const updated = await prisma.user.update({
+    where: {
+      id,
+    },
+    data: {
+      image: url,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      image: true,
+    },
+  });
+
+  return res.status(200).json(updated);
 };
