@@ -93,6 +93,7 @@ export const getAllSaleByUserId = async (req: Request, res: Response) => {
             name: true,
           },
         },
+        createdAt: true,
       },
     });
 
@@ -126,8 +127,15 @@ export const getDetailsSaleByUserId = async (req: Request, res: Response) => {
             quantity: true,
           },
         },
+        createdAt: true,
       },
     });
+
+    if (!DetailsSales) {
+      return res
+        .status(400)
+        .json({ message: "Nenhum detalhe encontrado para essa compra." });
+    }
 
     return res.status(200).json(DetailsSales);
   } catch (error) {
