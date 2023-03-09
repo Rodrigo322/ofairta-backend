@@ -57,6 +57,25 @@ export const getAllStore = async (req: Request, res: Response) => {
   }
 };
 
+export const getAllStoreByOwner = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.user;
+    const stores = await prisma.store.findMany({
+      where: {
+        userId: id,
+      },
+    });
+
+    if (!stores) {
+      return res.status(400).json({ message: "Nenhuma banca encontrada" });
+    }
+
+    return res.status(200).json(stores);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+
 export const updateStore = async (req: Request, res: Response) => {
   try {
     const { name, description } = storeUpdateSchema.parse(req.body);
@@ -86,6 +105,35 @@ export const updateStore = async (req: Request, res: Response) => {
     });
 
     return res.status(200).json(updateStore);
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
+
+export const deleteStore = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.user;
+    const { storeId } = req.params;
+
+    const isStore = await prisma.store.findUnique({
+      where: { id: storeId },
+    });
+
+    if (isStore?.userId !== id) {
+      return res
+        .status(400)
+        .json({ message: "Banca não pertence e esse usuário." });
+    }
+
+    if (!isStore) {
+      return res.status(400).json({ message: "Banca não encontrada." });
+    }
+
+    await prisma.store.delete({
+      where: { id: storeId },
+    });
+
+    return res.status(200).json({ message: "Banca excluida com sucesso." });
   } catch (error) {
     return res.status(400).json(error);
   }
