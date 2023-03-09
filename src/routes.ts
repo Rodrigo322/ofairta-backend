@@ -22,6 +22,7 @@ import {
   getUniqueProducts,
 } from "./controllers/ProductController";
 import {
+  getAllSaleByOwner,
   getAllSaleByUserId,
   getAllSales,
   getDetailsSaleByUserId,
@@ -141,15 +142,40 @@ router.get(
 );
 
 //rotas das vendas
+
+/**
+ * Comprador realiza uma compra.
+ */
 router.post("/create-sale", authMiddleware(["adm", "Comprador"]), performSale);
+
+/**
+ * Retorna todas as vendas realizadas
+ */
 router.get("/get-all-sale", authMiddleware(["adm", "Vendedor"]), getAllSales);
+
+/**
+ * Comprador buscas os detalhes de uma compra feita por ele.
+ */
 router.get(
   "/get-details-sale-by-user/:saleId",
   authMiddleware(["adm", "Vendedor", "Comprador"]),
   getDetailsSaleByUserId
 );
+
+/**
+ * Comprador busca todas as compra que ele realizou.
+ */
 router.get(
   "/get-all-sale-by-user",
   authMiddleware(["adm", "Comprador"]),
   getAllSaleByUserId
+);
+
+/**
+ * Retorna todos os pedidos feitos ao vendedor
+ */
+router.get(
+  "/get-all-sale-by-owner",
+  authMiddleware(["adm", "Vendedor"]),
+  getAllSaleByOwner
 );

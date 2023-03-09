@@ -51,7 +51,6 @@ export const performSale = async (req: Request, res: Response) => {
     });
 
     // Atualiza a quantidade de cada produto vendido na tabela de produtos
-
     productsWithQuantity.map(async (product) => {
       await prisma.product.updateMany({
         where: { id: product.id },
@@ -65,8 +64,7 @@ export const performSale = async (req: Request, res: Response) => {
 
     res.status(200).json({ message: "Compra realizada com sucesso", sale });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Ocorreu um erro ao realizar a venda" });
+    res.status(400).json(error);
   }
 };
 
@@ -83,7 +81,6 @@ export const getAllSales = async (req: Request, res: Response) => {
 export const getAllSaleByUserId = async (req: Request, res: Response) => {
   try {
     const { id } = req.user;
-
     const allSales = await prisma.sale.findMany({
       where: {
         buyerId: id,
@@ -101,7 +98,7 @@ export const getAllSaleByUserId = async (req: Request, res: Response) => {
 
     return res.status(200).json(allSales);
   } catch (error) {
-    return res.status(500).json(error);
+    return res.status(400).json(error);
   }
 };
 
@@ -134,6 +131,32 @@ export const getDetailsSaleByUserId = async (req: Request, res: Response) => {
 
     return res.status(200).json(DetailsSales);
   } catch (error) {
-    return res.status(500).json(error);
+    return res.status(400).json(error);
+  }
+};
+
+export const getAllSaleByOwner = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.user;
+    const allSales = await prisma.sale.findMany({
+      where: {
+        sellerId: id,
+      },
+      select: {
+        id: true,
+        total_value: true,
+        buyer: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        saleProducts: true,
+      },
+    });
+
+    return res.status(200).json(allSales);
+  } catch (error) {
+    return res.status(400).json(error);
   }
 };
