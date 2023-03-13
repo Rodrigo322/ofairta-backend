@@ -97,7 +97,6 @@ export const getAllUsers = async (req: Request, res: Response) => {
 };
 
 export const getUniqueUser = async (req: Request, res: Response) => {
-  try {
     const { id } = req.user;
 
     const user = await prisma.user.findUnique({
@@ -111,14 +110,13 @@ export const getUniqueUser = async (req: Request, res: Response) => {
       },
     });
 
+    console.log(user);
+
     if (!user) {
       return res.status(404).json({ message: "usuário não encontrado!" });
     }
 
     return res.status(200).json(user);
-  } catch (error) {
-    return res.status(400).json(error);
-  }
 };
 
 export const updateUser = async (req: Request, res: Response) => {

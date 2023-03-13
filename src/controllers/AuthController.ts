@@ -1,21 +1,11 @@
 import { compare } from "bcryptjs";
 import { Request, Response } from "express";
 import { sign } from "jsonwebtoken";
-import { z } from "zod";
 import { prisma } from "../database/prisma";
-
-const singInSchema = z.object({
-  email: z
-    .string()
-    .email({ message: "Por favor preencha o e-mail corretamente" }),
-  password: z
-    .string()
-    .min(6, { message: "A senha deve conter pelo 6 menos caracteres." }),
-});
 
 export const signIn = async (req: Request, res: Response) => {
   try {
-    const { email, password } = singInSchema.parse(req.body);
+    const { email, password } = req.body;
     const user = await prisma.user.findUnique({
       where: {
         email,
