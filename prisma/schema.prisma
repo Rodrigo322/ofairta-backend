@@ -15,7 +15,6 @@ model User {
   password         String
   cpf              String            @unique
   stores           Store[] // Relationship with 'Store' table
-  sales            Sale[] // Relationship with 'Sale' table
   sales_as_seller  Sale[]            @relation("seller")
   sales_as_buyer   Sale[]            @relation("buyer")
   accessLevels     AccessLevel[]
@@ -98,8 +97,6 @@ model Sale {
   sellerId     String
   buyerId      String
   saleProducts SaleProduct[]
-  user         User?         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId       String?
   status       StateSale     @default(OPEN)
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @default(now()) @updatedAt

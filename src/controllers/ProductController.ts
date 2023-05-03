@@ -66,7 +66,7 @@ export const createProduct = async (req: Request, res: Response) => {
 
     const config: GetSignedUrlConfig = {
       action: "read",
-      expires: Date.now() + 1000 * 60 * 60 * 24 * 7, // 7 days
+      expires: Date.now() + 1000 * 60 * 60 * 24 * 300, // 300 days
     };
 
     const [url] = await fileRef.getSignedUrl(config);
