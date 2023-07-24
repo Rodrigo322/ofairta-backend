@@ -53,13 +53,13 @@ router.post("/access-level",  createAccessLevel);
 router.get("/access-level", authMiddleware(["adm"]), getAllAccessLevel);
 
 //rotas do usuário
-router.post("/user", createUser);
+router.post("/create-user", createUser);
 router.delete(
   "/delete-user",
   authMiddleware(["adm", "Vendedor", "Comprador"]),
   deleteUser
 );
-router.get("/user", authMiddleware(["adm"]), getAllUsers);
+router.get("/get-all-users", authMiddleware(["adm"]), getAllUsers);
 router.put(
   "/update-user",
   authMiddleware(["adm", "Vendedor", "Comprador"]),
@@ -103,7 +103,7 @@ router.delete(
 router.post("/sign-in", signIn);
 
 // rotas da loja
-router.post("/store", authMiddleware(["adm", "Vendedor"]), createStore);
+router.post("/create-store", authMiddleware(["adm", "Vendedor"]), createStore);
 router.get(
   "/stores",
   authMiddleware(["adm", "Vendedor", "Comprador"]),

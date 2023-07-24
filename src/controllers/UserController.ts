@@ -141,6 +141,16 @@ export const updateUser = async (req: Request, res: Response) => {
         cpf,
         email,
       },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        accessLevels: {
+          select: {
+            name: true,
+          }
+        }
+      }
     });
 
     return res.status(200).json(user);

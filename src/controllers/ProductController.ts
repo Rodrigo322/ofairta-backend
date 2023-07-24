@@ -86,7 +86,7 @@ export const createProduct = async (req: Request, res: Response) => {
       },
     });
 
-    return res.status(200).json(createProduct);
+    return res.status(201);
   } catch (error) {
     return res.status(400).json(error);
   }
