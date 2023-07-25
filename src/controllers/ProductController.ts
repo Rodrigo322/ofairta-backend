@@ -221,3 +221,39 @@ export const updateProduct = async (req: Request, res: Response) => {
     return res.status(400).json(error);
   }
 };
+
+export const deleteProduct = async (req: Request, res: Response) => {
+  try {
+    const { productId } = req.params;
+    const { id } = req.user;
+
+    const isProduct = await prisma.product.findUnique({
+      where: { id: productId },
+      include: {
+        store: {
+          select: {
+            userId: true,
+          },
+        },
+      },
+    });
+
+    if (!isProduct) {
+      return res.status(404).json({ message: "Produto não encontrado!" });
+    }
+
+    if (isProduct.store?.userId !== id) {
+      return res
+        .status(401)
+        .json({ message: "Esse Produto não pertence a esse usuário!" });
+    }
+
+    await prisma.product.delete({
+      where: { id: productId },
+    });
+
+    return res.status(200).json({ message: "Produto deletado!" });
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};

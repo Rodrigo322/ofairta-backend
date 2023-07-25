@@ -17,6 +17,7 @@ import {
 import { signIn } from "./controllers/AuthController";
 import {
   createProduct,
+  deleteProduct,
   getAllProducts,
   getAllProductsStore,
   getUniqueProducts,
@@ -153,6 +154,11 @@ router.put(
   "/update-product/:productId",
   authMiddleware(["adm", "Vendedor"]),
   updateProduct
+);
+router.delete(
+  "/delete-product/:productId",
+  authMiddleware(["adm", "Vendedor"]),
+  deleteProduct
 );
 
 //rotas das vendas
