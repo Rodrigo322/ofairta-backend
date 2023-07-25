@@ -6,20 +6,21 @@ const upload = multer(uploadConfig);
 
 import {
   createAccessLevel,
-  getAllAccessLevel
+  getAllAccessLevel,
 } from "./controllers/AccessLevelController";
 import {
   createAddress,
   deleteAddress,
   getAddress,
-  updateAddress
+  updateAddress,
 } from "./controllers/AddressController";
 import { signIn } from "./controllers/AuthController";
 import {
   createProduct,
   getAllProducts,
   getAllProductsStore,
-  getUniqueProducts
+  getUniqueProducts,
+  updateProduct,
 } from "./controllers/ProductController";
 import {
   getAllSaleByOwner,
@@ -27,14 +28,14 @@ import {
   getAllSales,
   getDetailsSaleByUserId,
   performSale,
-  updateClosedSaleByOwner
+  updateClosedSaleByOwner,
 } from "./controllers/SaleController";
 import {
   createStore,
   deleteStore,
   getAllStore,
   getAllStoreByOwner,
-  getUniqueStoreByOwner
+  getUniqueStoreByOwner,
 } from "./controllers/StoreController";
 import {
   addProfileImage,
@@ -42,14 +43,14 @@ import {
   deleteUser,
   getAllUsers,
   getUniqueUser,
-  updateUser
+  updateUser,
 } from "./controllers/UserController";
 import { authMiddleware } from "./middlewares/authMiddleware";
 
 export const router = Router();
 
 //rotas de nível de acesso
-router.post("/access-level",  createAccessLevel);
+router.post("/access-level", createAccessLevel);
 router.get("/access-level", authMiddleware(["adm"]), getAllAccessLevel);
 
 //rotas do usuário
@@ -147,6 +148,11 @@ router.get(
   "/get-unique-product/:productId",
   authMiddleware(["adm", "Vendedor", "Comprador"]),
   getUniqueProducts
+);
+router.put(
+  "/update-product/:productId",
+  authMiddleware(["adm", "Vendedor"]),
+  updateProduct
 );
 
 //rotas das vendas
