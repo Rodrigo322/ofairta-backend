@@ -97,26 +97,29 @@ export const getAllUsers = async (req: Request, res: Response) => {
 };
 
 export const getUniqueUser = async (req: Request, res: Response) => {
-    const { id } = req.user;
+  const { id } = req.user;
 
-    const user = await prisma.user.findUnique({
-      where: { id },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        cpf: true,
-        image: true,
+  const user = await prisma.user.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      cpf: true,
+      image: true,
+      accessLevels: {
+        select: {
+          name: true,
+        },
       },
-    });
+    },
+  });
 
-    console.log(user);
+  if (!user) {
+    return res.status(404).json({ message: "usuário não encontrado!" });
+  }
 
-    if (!user) {
-      return res.status(404).json({ message: "usuário não encontrado!" });
-    }
-
-    return res.status(200).json(user);
+  return res.status(200).json(user);
 };
 
 export const updateUser = async (req: Request, res: Response) => {
@@ -148,9 +151,9 @@ export const updateUser = async (req: Request, res: Response) => {
         accessLevels: {
           select: {
             name: true,
-          }
-        }
-      }
+          },
+        },
+      },
     });
 
     return res.status(200).json(user);

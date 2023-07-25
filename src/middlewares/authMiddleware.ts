@@ -48,6 +48,7 @@ export function authMiddleware(permissions?: string[]) {
 
       return next();
     } catch (err) {
+      console.log(err);
       return res.status(401).json({ message: "Token inválido" });
     }
   };
