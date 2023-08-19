@@ -132,7 +132,7 @@ router.get(
 router.post(
   "/create-product/:storeId",
   authMiddleware(["adm", "Vendedor"]),
-  upload.array("image"),
+  upload.single("image"),
   createProduct
 );
 router.get(
