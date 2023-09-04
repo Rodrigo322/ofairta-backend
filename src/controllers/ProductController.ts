@@ -40,7 +40,7 @@ export const createProduct = async (req: Request, res: Response) => {
     console.log(requestImage);
     if (!requestImage) {
       return res
-        .status(400)
+        .status(404)
         .json({ message: "Nenhum arquivo de imagem enviado." });
     }
 
@@ -59,7 +59,7 @@ export const createProduct = async (req: Request, res: Response) => {
     });
 
     fileStream.on("finish", () => {
-      res.status(200).json("Imagem enviada com sucesso.");
+      res.status(200).json({ message: "Imagem enviada com sucesso." });
     });
 
     fileStream.end(requestImage.buffer);
