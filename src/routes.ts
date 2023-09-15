@@ -4,6 +4,9 @@ import multer from "multer";
 import uploadConfig from "./configs/multer";
 const upload = multer(uploadConfig);
 
+import { UserController } from "./controllers/UserController";
+const userController = new UserController();
+
 import {
   createAccessLevel,
   getAllAccessLevel,
@@ -77,6 +80,11 @@ router.put(
   upload.single("image"),
   authMiddleware(["adm", "Vendedor", "Comprador"]),
   addProfileImage
+);
+router.put(
+  "/add-history-producer",
+  authMiddleware(["adm", "Vendedor"]),
+  userController.createHistoryProducer
 );
 
 //rotas de endereços

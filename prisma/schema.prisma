@@ -21,6 +21,7 @@ model User {
   userAccessLevels UserAccessLevel[]
   address          Address[]
   image            String?
+  historiy         String            @default("Ainda possui nenhuma historia cadastrada")
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @default(now()) @updatedAt
 }

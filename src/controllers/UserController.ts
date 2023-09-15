@@ -255,3 +255,18 @@ export const addProfileImage = async (req: Request, res: Response) => {
 
   return res.status(200).json(updated);
 };
+
+export class UserController {
+  async createHistoryProducer(req: Request, res: Response) {
+    const { id } = req.user;
+    const { historyContent } = req.body;
+    const history = await prisma.user.update({
+      where: { id },
+      data: {
+        historiy: historyContent,
+      },
+    });
+
+    return res.status(201).json(history);
+  }
+}
